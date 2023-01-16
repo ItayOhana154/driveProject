@@ -9,6 +9,7 @@ function Main() {
     const { user } = useUser();
     const [usersFiles, setUsersFiles] = useState({ files: [] })
     const [fileContent, setFileContent] = useState("");
+    const [currentShown,setCurrentShown] = useState('')
 
     useEffect(() => {
         async function getFiles() {
@@ -21,10 +22,18 @@ function Main() {
         getFiles();
     }, [])
 
-    async function showContent(file) {
-        const res = await fetch(`http://localhost:8000/api/users/${user}/${file}`);
+    async function showContent(file) { 
+        if(fileContent===""){
+        console.log(`http://localhost:8000/api/users/${user}/${file.type}/${file.fileName}`);
+        const res = await fetch(`http://localhost:8000/api/users/${user}/${file.type}/${file.fileName}`);
         const data = await res.json();
         setFileContent(data);
+        setCurrentShown(file.fileName);
+        }
+        else{
+            setFileContent("");
+            setCurrentShown('');
+        }
     }
 
     async function addFile(type) {
@@ -86,6 +95,10 @@ function Main() {
         setUsersFiles(data);
     }
 
+    async function moveFile(){
+        
+    }
+
     console.log("userfiles", usersFiles);
     return (
         <div className="App">
@@ -93,14 +106,14 @@ function Main() {
             <button onClick={() => addFile("file")}>Add file</button>
             <button onClick={() => addFolder("folder")}>Add folder</button>
             <ul>
-                {usersFiles ? usersFiles.files.map((file, index) => <li style={file.type == "folder" ? { background: "yellow" } : null} key={"a" + index}><a key={index} onClick={() => showContent(file)} href='#'>{file.fileName}</a>
+                {usersFiles ? usersFiles.files.map((file, index) => <li style={file.type == "folder" ? { background: "yellow" } : null} key={"a" + index}><b key={index} onClick={() => showContent(file)} >{file.fileName}</b>
                     <button onClick={() => showStats(file)}>info</button>
                     <p>{file.stats.show ? `the size is:${file.stats.size} the birthtime is ${file.stats.birthtime}` : ""}</p>
                     <button onClick={()=>rename(file)}>rename</button>
-                    <button>move</button>
+                    <button style={file.type=="folder"?{display:"none"}:null} onClick={()=>moveFile(file)}>move</button>
                     <button onClick={()=>deleteF(file)}>delete</button></li>) : ""}
             </ul>
-            <p></p>
+            <p style={{background:"purple"}}><b>{currentShown}</b><br/>{fileContent}</p>
             <Link to="/">logout</Link>
         </div>
     );

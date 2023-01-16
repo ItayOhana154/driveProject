@@ -60,16 +60,25 @@ router.get('/:name', function (req, res, next) {
 // });
 
 
-router.get('/:name/:file', function (req, res, next) {
-  // let user = users.find((user) => user.name == req.params.name);
-
+router.get('/:name/:type/:file', function (req, res, next) {
+  // // let user = users.find((user) => user.name == req.params.name);
+  if(req.params.type === 'file'){
   fs.readFile(`./users/${req.params.name}/${req.params.file}`, function (err, data) {
     if (err) {
       return console.log('Unable to scan directory: ' + err);
     }
     const needed = data.toString();
+    console.log(needed);
     res.json(needed);
-  });
+  })};
+  if(req.params.type === 'folder'){
+    console.log("hello world!");
+  fs.readdir(`./users/${req.params.name}/${req.params.file}`, function (err, data) {
+    if (err) {
+      return console.log('Unable to scan directory: ' + err);
+    }
+    res.json(data);
+  })}
 });
 
 router.post('/:name', function (req, res) {
@@ -93,7 +102,7 @@ router.post('/:name', function (req, res) {
           console.log(err);
         }
         let stats = fs.statSync(`./users/${req.params.name}/${req.body.fileName}`, 'utf8')
-        console.log(typeof stats);
+        console.log(stats);
         user.files.push({ fileName: req.body.fileName, type: "file", stats: { show: false, size: stats.size, birthtime: stats.birthtime } })
         console.log(user);
         fs.writeFileSync(`../usersArr.json`, JSON.stringify(users), 'utf8')
@@ -103,14 +112,22 @@ router.post('/:name', function (req, res) {
   }
   else if (req.body.type == "folder") {
     let users
+    console.log("hello");
     fs.readFile('../usersArr.json', 'utf8', (err, data) => {
       users = JSON.parse(data);
       const user = users.find(user => user.name === req.params.name);
-      user.files.push({ fileName: req.body.fileName, type: "folder" })
       console.log(users);
-      fs.mkdirSync(`./users/${req.params.name}/${req.body.fileName}`);
-      fs.writeFileSync(`../usersArr.json`, JSON.stringify(users), 'utf8')
-      res.json(user)
+      fs.mkdir(`./users/${req.params.name}/${req.body.fileName}`, req.body.fileBody, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        let stats = fs.statSync(`./users/${req.params.name}/${req.body.fileName}`, 'utf8')
+        console.log(stats);
+        user.files.push({ fileName: req.body.fileName, type: "folder", stats: { show: false, size: stats.size, birthtime: stats.birthtime } })
+        console.log(user);
+        fs.writeFileSync(`../usersArr.json`, JSON.stringify(users), 'utf8')
+        res.json(user)
+      });
     })
   }
   else {
