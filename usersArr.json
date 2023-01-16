@@ -1,0 +1,42 @@
+[
+    {
+        "name": "erer",
+        "password": "ererr",
+        "files": []
+    },
+    {
+        "name": "Bret",
+        "password": "erer",
+        "files": []
+    },
+    {
+        "name": "ofek",
+        "password": "o",
+        "files": [
+            {
+                "fileName": "op",
+                "type": "file",
+                "stats": {
+                    "show": false,
+                    "size": 4,
+                    "birthtime": "2023-01-16T09:40:16.648Z"
+                }
+            }
+        ]
+    },
+    {
+        "name": "sagifucksyourass",
+        "password": "1234",
+        "files": [
+            {
+                "fileName": "eee",
+                "type": "file"
+            }
+        ]
+    },
+    {
+        "name": "ofeke",
+        "password": "e",
+        "files": []
+    }
+]

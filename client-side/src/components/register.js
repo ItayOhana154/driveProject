@@ -3,7 +3,7 @@ import { useUser } from '../contexts/userContext';
 import { Link, useNavigate } from 'react-router-dom';
 // import Main from './components/main';
 
-function Login() {
+function Register() {
     const navigate = useNavigate();
     const [inputValues, setInputValues] = useState({ username: "", password: "" })
     const {user, setUser}= useUser()
@@ -16,7 +16,7 @@ function Login() {
     async function moveMe(e) {
         e.preventDefault();
     
-        const res = await fetch(`http://localhost:8000/api/users/${inputValues.username}`, {
+        const res = await fetch(`http://localhost:8000/api/users`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json'},
             body: JSON.stringify(inputValues)
@@ -26,7 +26,7 @@ function Login() {
         if (currentUser.name) {
             alert("bad");
             setUser(currentUser.name);
-            navigate(`/drive/${currentUser.name}`)
+            navigate(`/`)
         }
         else {
             alert("rtrt");
@@ -43,9 +43,9 @@ function Login() {
                 <input type="text" name="password" value={inputValues.password} onChange={(e) => handleChange(e)} /><br />
                 <input type="submit" />
             </form>
-            <Link to="/register">register</Link>
+            <Link to="/">login</Link>
         </div>
     );
 }
 
-export default Login;
+export default Register;
